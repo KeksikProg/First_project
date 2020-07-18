@@ -1,0 +1,37 @@
+{% extends 'layout/basic.html' %}
+
+{% load thumbnail %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<h2>Посты</h2>
+{% if posts %}
+<ul class = 'list-unstyled'>
+	{% for post in posts %} <!--Для всех объявлений в контексте-->
+	<li class = 'media my-5 p-3 border'>
+		<p>
+			{% if post.image %} <!--Если есть фотка--> 
+				{% thumbnail post.image 'default' as timg %}
+				<img src="{{ timg.url }}" class = 'mr-3'>
+			{% endif %}
+		</p>
+		<div class = 'media=body'>
+			<a href="{% url 'news:detail' pk=post.pk %}">
+				<h3><p>{{ post.title }}</p></h3> <!--Название-->
+			</a>
+			<div>{{ post.content }}</div> <!--Описание-->
+			<p class = 'text-right fonr-italic'>{{ post.created_at }}</p> <!--Когда создано-->
+			{% if user.is_superuser %}
+				<a href="{% url 'news:delete' pk=post.pk %}" class = 'mr-3'  >Удалить</a>
+				<a href="{% url 'news:change' pk=post.pk %}">Изменить</a>
+			{% endif %}
+		</div>
+	</li>
+	{% endfor %}
+</ul>
+{% bootstrap_pagination page %}
+{% endif %}
+{% endblock %}

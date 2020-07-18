@@ -1,0 +1,15 @@
+{% extends 'layout/basic.html' %}
+
+{% load bootstrap4 %}
+
+{% block title %}Изменение поста - ВкусныеРецепты{% endblock %}
+
+{% block content %}
+<h2>Изменения поста</h2>
+<form method="post" enctype="multipart/form-data"> <!--enctype ужен для того чтобы, занесенные файлы в форму сохранились-->
+	{% csrf_token %}
+	{% bootstrap_form form layout='horizontal' %}
+	{% bootstrap_formset formset layout='horizontal' %}
+	{% buttons submit='Изменить' %}{% endbuttons %}
+</form>
+{% endblock %}

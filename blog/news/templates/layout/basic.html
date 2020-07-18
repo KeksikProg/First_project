@@ -1,0 +1,72 @@
+{% load bootstrap4 %}
+{% load static %}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type"
+	content="text/html; charset = utf-8">
+	<meta name = 'viewport' 
+	content="width = device-width, inital-scale = 1, shrink-to-fit = no"> <!-- Эта мета нужна для того чтобы Bootstrap правильно обработал страницу -->
+	<title>{% block title %}Главная{% endblock %} - Блог ВкусныеРецепты</title> <!--Тут у нас первый блок Title-->
+	{% bootstrap_css %} <!--Тут мы подключаем к нашей странице таблицу стилей Bootstrap-->
+	<link rel="stylesheet" type="text/css" href="{% static 'news/style.css' %}"> <!--И не забываем привязать наш CSS файл который мы создадим чуть позже-->
+	{% bootstrap_javascript jquery='slim' %} <!--Тут мы подключаем JQuery, чтобы заработало менб выдвигающееся (слим версия потому что нам много не надо, только меню)-->
+</head>
+<body class = 'container-fluid'> <!--Данный тег надо привязывать к любой странице, которая верстается с помощью Bootstrap-->
+	
+	<header class = 'mb-4'> <!--mb-4 Это стилевой класс, который установит большот отступ снизу у элемента -->
+		<h1 class ='display-1 text-center'>Посты</h1> <!-- а классы display-1 и text-center просто увеличат текст и сделают так чтобы он был посередине-->
+	</header>
+
+	<div class = 'row' > <!--Застявляет страничку вести себя как таблицу, хоть она ей и не является (впечатляет)--> 
+		<ul class = 'col nav justify-content-end border'> <!--col заставялет себя вести как ячейка таблицы, а justify-content-end border застявляет навигацию выравнятся по правому краю, border делает рамку у навигации--> <!---->
+			{% if user.is_authenticated %} <!--Если пользователь зашёл в аккаунт то у него не будет кнопки войти (потому что это бессмысленно, он уже вошёл)-->
+				<li class = 'nav-item dropdown'>
+					<a href="#" class = 'nav-link dropdown-toggle' data-toggle = 'dropdown' role = 'button' aria-haspopup = 'true' aria-expended = 'false'>Профиль</a>
+					<div class = 'dropdown-menu'> <!--Раскрывающеся меню-->
+						<a class = 'dropdown-item' href="{% url 'news:changeuser' %}">Изменить личные данные</a>
+						<a class = 'dropdown-item' href="{% url 'news:changepassword'%}">Изменить пароль</a>
+						<div class = 'dropdown-divider'></div> <!--Выступает в виде разделителя между пунктами-->
+						<a class = 'dropdown-item' href="{% url 'news:logout' %}">Выйти</a>
+						<div class = 'dropdown-divider'></div>
+						<a class = 'dropdown-item' href="{% url 'news:deleteuser' %}">Удалить аккаунт</a>
+					</div>
+				</li>
+			{% else %} <!--А тут наоборот ,если он не вошёл, то не сможет зайти в свой аккаунт, тк неоткуда его брать-->
+				<li class = 'nav-item'><a href="{% url 'news:register' %}" class = 'nav-link'>Регистрация</a></li>
+				<li class = 'nav-item'><a class = 'nav-link' href="{% url 'news:login' %}">Вход</a></li>
+			{% endif %}
+		</ul>
+		{% if user.is_superuser %}
+			<ul class = 'col nav justify-content-end border'>
+				<li class = 'nav-item dropdown'>
+					<a href="#" class = 'nav-link dropdown-toggle' data-toggle = 'dropdown' role = 'button' aria-haspopup = 'true' aria-expended = 'false'>Админка</a>
+					<div class = 'dropdown-menu'>
+						<a class = 'nav-link root' href="{% url 'news:add' %}">Добавить пост</a>
+					</div>
+				</li>
+			</ul>
+		{% endif %}
+	</div>
+
+
+	<div class = 'row'> <!--Опять таблица--> 
+		<nav class = 'col-md-auto nav flex-column border'> <!--опять создает ячейку, но md-auto делает так что ячейка строится отталкиваясь от ширины её содержимого, также привязали класс nav, flex-column, чтобы превратить её в вертикальную модель и border, чтобы появилась рамка-->
+			<a href="{% url 'news:home' %}" class = 'nav-link root'>Главная</a> <!--nav-link нам уже знаком, а root сделает текст более жирным,его мы сделем в нашем собственном CSS, потому что он ведет на главную страницу-->
+			<a class="nav-link root" href="{% url 'news:other' page='about' %}">О сайте</a> <!--% url 'news:other' page='about' %-->
+		</nav>
+
+		<section class = 'col border py-2'> <!--py-2 задаст небольшие отступы сверху и снизу -->
+			{% bootstrap_messages %} <!--С помощью этого будут выводиться всплывающие сообщения-->
+			{% block content %} <!--Наш второй блок, тут будет наполенение-->
+			{% endblock %} 
+		</section> 
+	</div>
+
+		<footer class = 'mt-3'> <!--Данный класс сделает больше отступы сверху-->
+			<p class = 'text-right font-italic'>&copy; Максюша Сердюков 2020г.</p> <!--сделает для подвала сайте текст по правому краю и курсивом--> 
+		</footer>
+</body>
+</html>

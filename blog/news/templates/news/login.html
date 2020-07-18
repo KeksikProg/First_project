@@ -1,0 +1,20 @@
+{% extends 'layout/basic.html' %}
+
+{% load bootstrap4 %}
+
+{% block title %}Вход на сайт{% endblock %}
+
+{% block content %}
+<h2>Вход</h2>
+{% if user.is_authenticated %} <!--Если пользователь уже вошёл в аккаунт мы прост скажем ему об этом-->
+<p>Вы уже выполнили вход.</p>
+{% else %} <!--Если же нет, то просто выведем форму входа на сайт-->
+<form method = 'post'>
+	{% csrf_token %} <!--Токен, который используется для защиты сайта -->
+	{% bootstrap_form form layout='horizontal' %} <!--Тк у нас всего 2 поля, то вход будет горизонтальный-->
+	<input type="hidden" name="next" value="{{ next }}"> <!--Будет после заполнения формы перенаправлять польхователя на другю страницу-->
+	{% buttons submit='Войти' %}{% endbuttons %} <!--Просто кнопка войти-->
+	<!--<p><a href="% url 'main:email_reset' %">Забыли пароль</a></p>-->
+</form>
+{% endif %}
+{% endblock %}
