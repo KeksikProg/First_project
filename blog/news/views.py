@@ -61,7 +61,7 @@ def add(request):
 	else:
 		raise Http404
 
-@login_required
+@login_required(login_url='/profile/login/')
 def detail(request, pk):
 	post = Post.objects.get(pk = pk)
 	ai = post.additionalimage_set.all()
